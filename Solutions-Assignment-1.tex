@@ -1,0 +1,410 @@
+\documentclass[a4 paper]{article}
+\usepackage[inner=2.0cm,outer=2.0cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage[rgb]{xcolor}
+\usepackage{verbatim}
+\usepackage{subcaption}
+\usepackage{amsgen,amsmath,amstext,amsbsy,amsopn,amssymb}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true, urlcolor=blue,  linkcolor=blue, citecolor=blue]{hyperref}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{rotating}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{dsfont}
+\usepackage{booktabs}
+\usepackage{lipsum}
+
+\newcommand{\homework}[3]{
+   %\pagestyle{myheadings}
+   \pagestyle{fancy}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf CS780: Deep Reinforcement Learning} \hfill{}}
+       \vspace{6mm}
+       \hbox to 6.28in { {\Large \hfill #1  \hfill} }
+       \vspace{6mm}
+       %\hbox to 6.28in { {\it Instructor: {\rm #3} \hfill Name: {\rm #5}, Netid: {\rm #6}} }
+       \hbox to 6.28in { {\textbf{Name}: {\rm #2} \hfill }} 
+        \hbox to 6.28in { {\textbf{Roll NO.}: {\rm #3} \hfill }} 
+       % \hbox to 6.28in { {\textbf{Google Colab Link (as tiny URL link)}: {\rm #4} \hfill }} 
+       %\hbox to 6.28in { {\it TA: #4  \hfill #6}}
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{CS780 -- #1 \hfill #2 (#3)}{CS780 -- #1 \hfill #2 (#3)}%{CS698R -- #1}
+   \vspace*{4mm}
+}
+
+\newcommand{\Solution}[1]{~\\\fbox{\textbf{Solution to Problem #1}}}
+
+\cfoot{\thepage}
+
+
+%#######################################################################
+%      WARNING:                   DO NOT CHANGE ANY OF THE LINES ABOVE 
+%      WARNING:                   DO NOT CHANGE ANY OF THE LINES ABOVE 
+%#######################################################################
+%#######################################################################
+
+
+
+\begin{document}
+\homework{Assignment \#1}{Kislay Aditya Oj}{210524}%{\url{www.tinyurl.com}}
+
+%#######################################################################
+%%%%%%%%%%%%%%%%% PROBLEM 1 %%%%%%%%%%%%%%%%%%%%%%
+%#######################################################################
+%#######################################################################
+
+
+\Solution{1: Multi-armed Bandits}
+\\
+%%%%%%%%%%%%%%%%%%
+% Remove the lines below these are only for demo
+%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item For the given Bernoulli Bandit we can intuitively see that we will get a reward if and only if the agent take the exact step given by the  action  i.e. the agent won't get any reward if it slips. \\
+From this we can interpret that,  for alpha = 1.0 and beta = 1.0 ,
+there is 100\% probability of getting a reward of +1. This is confirmed in the following snippet where we took alpha and beta to be 1 . \\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\linewidth]{one.png}
+    \includegraphics[width=0.3\linewidth]{two.png}
+\end{figure}
+
+Also , for alpha and beta = 0 ,
+we can clearly see that the average reward over 10 episodes is 0 , which further confirms the postulate.
+( Note that the policy used here is completely random i.e. the action will be selected from the action space randomly )
+\item In the given Bernoulli Bandit , this time the rewards are stochastic i.e. the reward value are completely random and depends only upon the standard deviation chosen. For a sigma value of 1 the average reward often comes between -1 and 1 , but for larger values such as sigma = 100 , the average rewards varies a lot. Here are two examples from the code having different sigma values.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\linewidth]{three.png}
+    \includegraphics[width=0.3\linewidth]{four.png}
+\end{figure}
+\\
+Additionally , we can see that this environment is quite random and generates different rewards based on different values of sigma.
+
+\item (a) \textbf{Pure - Exploitation :} \\
+For alpha , beta pairs  we got : 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\linewidth]{greed.png}
+    \includegraphics[width=0.375\linewidth]{greed2.png}
+\end{figure}
+
+As expected , the agent goes for greedy strategy , once it got a reward it only stuck to that particular action .
+
+(b) \textbf{Pure - Exploration :} \\
+For alpha , beta pairs  we got : 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.31\linewidth]{explore1.png}
+    \includegraphics[width=0.27\linewidth]{explore2.png}
+    \includegraphics[width=0.3\linewidth]{explore3.png}
+\end{figure}
+
+As expected , the agent gave the preference to exploration and did both the actions to get a significantly better reward average than pure exploitation.
+
+(c) \textbf{Epsilon-Greedy :} \\
+For alpha , beta pairs  we got : 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.31\linewidth]{epsilon1.png}
+    \includegraphics[width=0.3\linewidth]{epsilon2.png}
+    \includegraphics[width=0.31\linewidth]{epsilon3.png}
+\end{figure}
+
+As we can see , the rewards depends upon the value of epsilon. More the value of epsilon more the agent will explore and less the value , the agent will exploit.
+
+(d) \textbf{Decaying Epsilon-Greedy :} \\
+For alpha , beta pairs  we got : 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\linewidth]{depsilon1.png}
+    \includegraphics[width=0.4\linewidth]{depsilon2.png}
+\end{figure}
+
+This agent is kind of same as last , but instead of giving a single value we decrease the epsilon value to get a spectrum. We can either decrease linearly or exponentially as shown.
+
+(e) \textbf{ Soft-max :} \\
+For alpha , beta pairs  we got : 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\linewidth]{softmax1.png}
+    \includegraphics[width=0.4\linewidth]{softmax2.png}
+\end{figure}
+
+Softmax is a strategic exploration policy where probability of selecting an option is proportional to current action-value estimate. The hyper parameter to be tuned here is temperature.
+
+(f) \textbf{ UCB :} \\
+For alpha , beta pairs  we got : 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.31\linewidth]{ucb1.png}
+    \includegraphics[width=0.3\linewidth]{ucb2.png}
+    \includegraphics[width=0.31\linewidth]{ucb3.png}
+\end{figure}
+
+UCB or upper confidence bound is a technique which uses uncertainty as a bonus for exploration . We can tune the parameter c to get desired rewards.
+
+\item From the plot we can clearly see that UCB and decaying epsilon is two of the best policy among the six . However , many other policies can also be tuned, but these two still remains on top. We can also observe here that Pure Exploitation works quite better than other strategies.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{qn4.png}
+\end{figure}
+
+\item However in the 10 arm bandit problem , when the environment is completely random we see the clear difference between strategies. UCB and Decaying epsilon greedy is clearly the best with Pure exploitation following it. The Pure Exploitation policy works quite good in this environment because there are only two actions to be taken with stocastic rewards on both of the actions. The softmax strategy has very high variance in initial episodes and took almost 200 episodes to converge. Other strategies are kind of comparable.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{plot42.png}
+\end{figure}
+
+
+\item The Regret-Episode plot for the 2-armed bandit problem we got is 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{regret2.png}
+\end{figure}
+
+Looking at it once , it is clear that in most of the strategies , the regret converges to one as number of episodes increase , but in case of Pure Exploration the regret is quite high even after 1000 episodes. This shows that this strategy is not quite compatible with the 2 arm bandit environment.\\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{regret35.png}
+\end{figure}
+
+Now if we remove the Pure Exploration strategy and look at the plot at the logarithmic scale ( top plot in next page )
+We can now compare different agents. At the first look we can see that as always UCB strategy works the best. The regret quickly converges to zero showing that it chooses the most optimal policy as the number of episodes increases. Other policies such as Epsilon Greedy ( value of epsilon is equal to 0.5 ) , Decaying Epsilon greedy and Softmax function shows variable relationship. They increase at first and later decrease to zero. This also shows us that we need to run the environment for multiple episodes before arriving to any conclusion. 
+
+
+\item In the Above question we saw the plot for a 'predictable environment'. But in the case of 10-armed bandit , the environment is random. The plot is given by the middle figure in next page .
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{regret4.png}
+\end{figure}
+
+ For clarity the log axis is also plotted ( bottom plot in next page)
+ 
+ \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{regret5.png}
+\end{figure}
+ 
+ In this case we see that almost all the agents follow the same trend , the regret in all case increases at first and over the episodes converges to zero . Also given that the reward is sampled from a gaussian distribution , the kind of trend is expected.
+ 
+ \item 9 and 10 .\\
+ Here is the required plot for Average rewards vs episodes and Optimal Action percent vs episodes for both  the environments.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{plot.png}
+    \caption{ 2-Armed bandit environment}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{plot2.png}
+    \caption{10-Armed bandit environment}
+\end{figure}
+ 
+ \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{opti1.png}
+    \caption{ 2-Armed bandit environment (Normal scale)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{opti2.png}
+    \caption{ 2-Armed bandit environment(Log-scale)}
+\end{figure}
+ 
+ \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{opti4.png}
+    \caption{ 10-Armed bandit environment (Normal scale)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{opti3.png}
+    \caption{ 10-Armed bandit environment(Log-scale)}
+\end{figure}
+ 
+\end{enumerate}
+
+
+\Solution{2: MC Estimates and TD Learning}
+\\
+%%%%%%%%%%%%%%%%%%
+% Remove the lines below these are only for demo
+%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Implemented and tested successfully
+\item Here's the plot for decay function :
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn22.png}
+    \caption{ Exponential vs Linear decay}
+\end{figure}
+
+
+
+\item The Monte-Carlo estimate function was implemented and checked . It was working as expected. The state near the goal has higher value than others.Also , due to randomness of the environment all other state also had quite similar values . One thing which I found interesting was that the values somewhat depends upon where we started. For example , if we start near state 5 the value of state 5 will be a little bit more than if we started from state let's say 3. Also the policy was always go left which somewhat affected the values of a state.
+
+\item The Temporal difference method gave better estimates of the states but the problem is , it depends on the reward of very next state, therefore in an environment like Random Walk where the reward is at the very end this takes a lot of episode to converge and kind of biased. Also the values of state highly depends upon where it started as closer the goal is better is the reward.
+
+
+\item The plot is given by  :
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn25.png}
+    \caption{ MC-FV estimates vs episodes}
+\end{figure}
+
+One thing to notice there is there is very less noise int the graph and the agents are taking long to converge. This is primarily because of the low alpha value taken . In this particular graph the alpha starts from 0.1 and decays to 0.001 which is pretty low considering normally we start from 1 or 0.5. Higher the value of alpha higher the noise we get in the graph. 
+
+\item The every visit plot is given by  :
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn26.png}
+    \caption{ MC-EV estimates vs episodes}
+\end{figure}
+
+First thing to note here is that the noise in initial stages of plot is comparatively higher than the noise in first visit MC estimates. The alpha takes here is same as the above but due to increase in information about the visits the values deflects a lot . However it converges to it's true value faster. Also , higher the value of alpha taken higher is the variations. ( Note that the dotted line in graph represent the true value of the states )
+
+\item The Temporal Difference plot is given by  :
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn27.png}
+    \caption{ TD estimates vs episodes}
+\end{figure}
+
+While it's true that there's a lot of variance in the plot initially ( alpha used is 0.5 ) , but the values of a state converges to it's true value faster than any of the above MC Estimates. Also , not to be confused why is it giving higher variance than Monte - Carlo as the alpha used in above plots are 0.1 , but the alpha used here is 0.5. If we compare it to 0.5 alpha - MC estimates , the variance is much lower than them. This is particularly because , TD- learning is a form of online learning , which updates it's value along the natural direction of the code. 
+
+
+\item The Plots are  :
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{qn281.png}
+    \caption{ Averaged out MC-FV estimates vs episodes}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{qn282.png}
+    \caption{ Averaged out MC-EV estimates vs episodes}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{qn283.png}
+    \caption{ Averaged out TD estimates vs episodes}
+\end{figure}
+
+Now that we have Averaged out version of all three plots we can now compare it clearly. Also , we can see that the noise decreased and the curves are now flattened. This is due to the fact we are sampling from 20 different environments ( The seeds taken are 0 to 20 ). The plots shows us faster convergence of TD approach and less biasing of MC values.
+
+\item The log scaled MCFV plot is given by (Figure 14)
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn29.png}
+    \caption{ MCFV estimates vs episodes (log)}
+\end{figure}
+ Here we can clearly see the variance which was not intuitively available to us in normal scale plots. Every state reaches it's true value but it oscillates around it a lot. 
+
+\item The log scaled MCEV plot is given by (Figure 15)
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn210.png}
+    \caption{ MCEV estimates vs episodes(log)}
+\end{figure}
+
+The log scale show the slow process of Monte carlo estimate reaching it's true value. The MCEV plot is particularly low because of extreme alpha of 0.01 taken but still fall behind TD methods which reaches to it's value faster.
+
+\item The log scaled TD plot is given by  (Figure 16)
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn211.png}
+    \caption{ TD estimates vs episodes(log)}
+\end{figure}
+
+The TD plot show us the true nature of the algorithm which is basically learning s fast as it can. Within 100 episodes , the TD can already guess much better than MC values. 
+
+\item Now that we have all the required plots we can conclude some differences between both these methods. \\
+ (a). MC methods generally shows slower convergence compared to TD methods. This is because MC methods require the entire episode to complete before updating state values, while TD methods update state values at every time step.
+Within MC methods, FVMC might converge slower than EVMC because FVMC updates state values only the first time a state is visited in an episode, while EVMC updates state values every time a state is visited.\\
+(b).MC methods typically have higher variance than TD methods. This is because MC methods rely on sampling full episodes, which can lead to high variability in returns.Within MC methods, FVMC may have higher variance than EVMC due to the episodic nature of updates in FVMC.\\
+(c).TD methods are generally more sample-efficient than MC methods, especially in environments with long episodes or large state spaces. TD methods update state values more frequently and can learn from incomplete episodes.
+
+
+
+\item The plot of MCFV Target value of state 5 is given by (Figure 17)
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn213.png}
+    \caption{ MCFV Target value vs episodes }
+\end{figure}
+
+\item The plot of MCEV Target value of state 5 is given by (Figure 18)
+One thing we can notice in both plots is that the value is either 0 or close to 1 ( some of the values are discounted based on how close the state 5 is compared to current state ) . Some value is particularly zero because of non appearance or zero reward dynamics of state 5. 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn214.png}
+    \caption{ MCEV Target value vs episodes }
+\end{figure}
+
+\item The plot of TD Target value of state 5 is given by (Figure 19)
+Also the TD-error vs episodes is also plotted in (Figure 20)
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn215.png}
+    \caption{  TD Target value vs episodes }
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{qn2155.png}
+    \caption{  TD Error vs episodes }
+\end{figure}
+\item Based on the given TD target and error plots one thing we can say for sure is the heavy influence of Environment dynamics on these scatters. The environment dynamics is completely random and gives rewards only on one state , this is one of the main reason of concentration of values near zeros and ones. 
+
+\newpage
+
+\textbf{References }
+\\
+1. CS780 Lecture Slides.\\
+2. OpenAI Gym Documentation
+
+
+
+
+
+
+
+
+
+
+\end{enumerate}
+
+
+\end{document}
