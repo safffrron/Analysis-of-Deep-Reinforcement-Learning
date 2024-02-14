@@ -20,4 +20,4 @@
       * Monte-Carlo EV
       * Temporal Difference 
      </pre>
-
+8. Plots and reports based on above methods.
