@@ -34,4 +34,20 @@
       * DYNA - Q ( Model Based )
       * Trajectory Sampling ( Model Based )
      </pre>     
+9. Deep Reinforcement Learning  -
+     <pre>
+      * Neural-Fitted Q ( NFQ )
+      * DQN , DDQN , D3QN
+      * PER-D3QN
+      * Reinforce
+      * VPG
+      * DDPG
+      * TD3
+      * PPO
+     </pre>     
 9. Plots and reports based on above methods.
+
+### Notes-
+1. The assignment contains all the implementation and plots. 
+2. It has two solutions - the one which I wrote and the one provided by tutors.
+3. All the codes in this repo may or may not be correct. Please verify once before using.
